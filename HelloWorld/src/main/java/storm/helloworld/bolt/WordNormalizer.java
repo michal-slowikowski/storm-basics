@@ -3,23 +3,26 @@ package storm.helloworld.bolt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import storm.helloworld.bolt.template.AbstractBolt;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
-public class WordNormalizer implements IRichBolt {
+public class WordNormalizer extends AbstractBolt{
 
 	private static final long serialVersionUID = 462960109656327405L;
 	private OutputCollector collector;
-
-	public void cleanup() {
-	}
+	private Logger logger = LoggerFactory.getLogger(WordNormalizer.class);
 
 	public void execute(Tuple input) {
+		logger.info("** Normalizing Tuple **");		
 		String sentence = input.getString(0);
 		String[] words = sentence.split(" ");
 		for (String word : words) {
@@ -44,4 +47,6 @@ public class WordNormalizer implements IRichBolt {
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		declarer.declare(new Fields("word"));
 	}
+
+
 }
